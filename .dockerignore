@@ -1,0 +1,14 @@
+.git/
+.venv/
+.jenkins-venv/
+.pytest_cache/
+.ruff_cache/
+.scannerwork/
+__pycache__/
+tests/
+reports/
+.env
+*.sqlite
+*.db
+*.pyc
+*.zip

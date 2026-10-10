@@ -1,0 +1,18 @@
+groups:
+  - name: sit753-service-health
+    rules:
+      - alert: StockAppDown
+        expr: up{job="stock-app"} == 0
+        for: 30s
+        labels:
+          severity: critical
+        annotations:
+          summary: "SIT753 stock application unreachable"
+          description: "Prometheus failed to scrape the stock application"
+      - alert: StockAppServerError
+        expr: increase(sit753_http_server_errors_total[5m]) > 0
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "SIT753 stock application returned an HTTP 5xx response"

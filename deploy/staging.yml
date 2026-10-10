@@ -1,0 +1,14 @@
+services:
+  stock-app-staging:
+    image: ${IMAGE_REPO}:${IMAGE_TAG}
+    container_name: sit753-stock-staging
+    restart: unless-stopped
+    environment:
+      APP_ENV: staging
+    volumes:
+      - staging-data:/app/data
+    ports:
+      - "8081:5000"
+volumes:
+  staging-data:
+    name: sit753-staging-data

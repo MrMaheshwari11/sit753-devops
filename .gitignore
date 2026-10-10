@@ -1,0 +1,14 @@
+.venv/
+.jenkins-venv/
+.pytest_cache/
+.ruff_cache/
+.scannerwork/
+__pycache__/
+reports/
+coverage.xml
+.coverage
+.env
+*.sqlite
+*.db
+*.pyc
+.DS_Store

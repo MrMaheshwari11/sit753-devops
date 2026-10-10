@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Stock Trend Lab | SIT753 DevOps</title>
+<style>
+:root{font-family:system-ui,-apple-system,sans-serif;color:#15243b;background:#eff3f8}
+*{box-sizing:border-box}body{margin:0}header{background:#0d2648;color:white;padding:28px 20px}
+main{max-width:900px;margin:26px auto;padding:0 16px}.muted{color:#66758a}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+.card{background:white;border-radius:14px;padding:22px;box-shadow:0 4px 22px #20304c12}
+h1,h2{margin-top:0}label{display:block;margin:14px 0 6px}input{padding:11px;border-radius:7px;border:1px solid #b9c7d5;width:100%}
+button{margin-top:14px;border:0;border-radius:8px;background:#1660b9;color:white;font-weight:650;padding:12px 20px;cursor:pointer}
+button:hover{background:#0c468c}#symbols{padding-left:18px}pre{overflow:auto;background:#f1f6fb;padding:14px;border-radius:8px;white-space:pre-wrap}
+footer{text-align:center;padding:18px;color:#66758a;font-size:13px}
+</style></head><body>
+<header><main style="margin:0 auto"><h1>Stock Trend Lab</h1><p>Functional Flask app for the SIT753 Jenkins DevOps pipeline</p></main></header>
+<main><p class="muted">Education-only moving average predictions. Values are examples, not live market quotes or investment advice.</p>
+<div class="cards"><section class="card"><h2>Trend predictor</h2>
+<label for="prices">Recent prices (comma-separated)</label><input id="prices" value="101,103,102,107,110">
+<label for="window">Moving-average window</label><input id="window" type="number" min="2" value="3">
+<button onclick="predict()">Calculate prediction</button><pre id="forecast">Enter prices and calculate.</pre></section>
+<section class="card"><h2>Saved watchlist</h2><label for="symbol">Stock ticker</label>
+<input id="symbol" value="AAPL" placeholder="e.g. AAPL"><button onclick="addSymbol()">Add to watchlist</button>
+<ul id="symbols"></ul><pre id="feedback">SQLite-backed CRUD</pre></section></div>
+<p><a href="/health">Application health</a> · <a href="/metrics">Prometheus metrics</a></p></main>
+<footer>SIT753 / SIT223 · DevOps Pipeline Demonstration</footer>
+<script>
+async function loadSymbols(){const r=await fetch('/api/watchlist');const j=await r.json();
+  document.getElementById('symbols').replaceChildren(...j.symbols.map(s=>{let li=document.createElement('li');li.textContent=s+' ';
+  let b=document.createElement('button');b.textContent='Remove';b.style.padding='4px 8px';b.onclick=async()=>{await fetch('/api/watchlist/'+encodeURIComponent(s),{method:'DELETE'});loadSymbols()};li.appendChild(b);return li}))}
+async function addSymbol(){const r=await fetch('/api/watchlist',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({symbol:document.getElementById('symbol').value})});
+  document.getElementById('feedback').textContent=JSON.stringify(await r.json(),null,2);loadSymbols()}
+async function predict(){let prices=document.getElementById('prices').value.split(',').map(x=>Number(x.trim()));
+  const r=await fetch('/api/predict',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prices,window:Number(document.getElementById('window').value)})});
+  document.getElementById('forecast').textContent=JSON.stringify(await r.json(),null,2)}
+loadSymbols();</script></body></html>
