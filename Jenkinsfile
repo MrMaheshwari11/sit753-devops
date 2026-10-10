@@ -5,7 +5,7 @@ pipeline {
         disableConcurrentBuilds()
     }
     environment {
-        IMAGE_REPO = 'YOUR_DOCKERHUB_USERNAME/sit753-stock-trend-lab'
+        IMAGE_REPO = 'mrmaheshwari11/sit753-stock-trend-lab'
         VERSION = "1.0.${BUILD_NUMBER}"
     }
     stages {
