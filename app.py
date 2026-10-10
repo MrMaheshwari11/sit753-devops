@@ -19,7 +19,7 @@ register_monitoring(app)
 
 def connect_database():
     """Create a SQLite connection and make sure the table exists."""
-    filename = Path(os.getenv("DATABASE_PATH", "/tmp/sit753-watchlist.sqlite"))
+    filename = Path(os.getenv("DATABASE_PATH", "data/sit753-watchlist.sqlite"))
     filename.parent.mkdir(parents=True, exist_ok=True)
     connection = sqlite3.connect(filename)
     connection.execute(
